@@ -46,25 +46,25 @@ public class RabbitMQConfig {
 		return new Jackson2JsonMessageConverter();
 	}
 	
-	@Bean
-    public RabbitTemplate rabbitTemplate() {
-        final RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        template.setMessageConverter(jsonMessageConverter());
-        return template;
-    }
+    @Bean
+	public RabbitTemplate rabbitTemplate() {
+	final RabbitTemplate template = new RabbitTemplate(connectionFactory());
+	template.setMessageConverter(jsonMessageConverter());
+	return template;
+	}
 	
 	@Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory =
-            new CachingConnectionFactory(applicationProperties.getRabbitMQIP());
-        connectionFactory.setPort(applicationProperties.getRabbitMQPort());
-        connectionFactory.setUsername(applicationProperties.getRabbitMQUserName());
-        connectionFactory.setPassword(applicationProperties.getRabbitMQPassword());
-        return connectionFactory;
-    }
+	public ConnectionFactory connectionFactory() {
+		CachingConnectionFactory connectionFactory =
+		    new CachingConnectionFactory(applicationProperties.getRabbitMQIP());
+		connectionFactory.setPort(applicationProperties.getRabbitMQPort());
+		connectionFactory.setUsername(applicationProperties.getRabbitMQUserName());
+		connectionFactory.setPassword(applicationProperties.getRabbitMQPassword());
+		return connectionFactory;
+	}
 	
 	@Bean
-    public RabbitAdmin rabbitAdmin() {
-        return new RabbitAdmin(connectionFactory());
-    }
+	public RabbitAdmin rabbitAdmin() {
+		return new RabbitAdmin(connectionFactory());
+	}
 }

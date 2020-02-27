@@ -10,5 +10,4 @@
 				<property name="additionalResourceSuffixes">html</property>
 			</properties>
 		</process-archive>
-	
 </process-application>
