@@ -8,6 +8,8 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,6 +33,9 @@ public class NoteService {
 	
 	@Autowired
 	RabbitMQSender rabbitMQSender;
+	
+	@Autowired
+	KieContainer kieContainer;
 	
 	@Cacheable
 	public List<Note> getAllNotes(){
@@ -94,5 +99,12 @@ public class NoteService {
 				new JSONTokener(NoteController.class.getResourceAsStream("/jsonSchema/noteSchema.json")));
 		Schema schema = SchemaLoader.load(jsonSchema);
 	    schema.validate(jsonObject);
+	}
+	
+	public void droolValidator(Note note) {
+		KieSession kieSession = kieContainer.newKieSession();
+		kieSession.insert(note);
+		kieSession.fireAllRules();
+		kieSession.dispose();
 	}
 }

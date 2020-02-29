@@ -21,7 +21,7 @@ public class SwaggerConfig {
           .apiInfo(apiInfo())
           .select()
           .apis(RequestHandlerSelectors.basePackage("com.nandha.easynotes.controllers"))
-          .paths(regex("/api.*"))
+          .paths(regex("/notesapi.*"))
           .build();
     }
     

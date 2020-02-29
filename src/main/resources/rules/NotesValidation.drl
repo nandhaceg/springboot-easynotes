@@ -1,0 +1,11 @@
+package com.nandha.rules
+
+import com.nandha.easynotes.model.Note;
+import com.nandha.easynotes.exception.RulesValidationException;
+
+rule "TitleValidation"
+	when
+		Note(title == "a")
+	then
+		throw new RulesValidationException("Title should not be a");
+end

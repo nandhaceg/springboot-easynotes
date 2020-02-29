@@ -5,4 +5,4 @@ camunda.bpm:
     firstName: Administrator
     lastName: Camunda
   filter:
-    Create: All tasks
+    create: All tasks

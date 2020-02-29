@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/notesapi")
 @Api(value = "notesapp")
 public class NoteController {
 
@@ -45,7 +47,6 @@ public class NoteController {
 	
 	//Hystrix Sample
 	@RequestMapping(value = "/notes/hystrix", method = RequestMethod.GET , produces = "application/json")
-	
 	@ApiOperation(value = "Hystrix Fallback Method" , response = Note.class)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200 , message = "Sucessfully called hystix fallback"),
@@ -79,6 +80,58 @@ public class NoteController {
 	}
 	
 	
+	//Start Camunda Workflow
+	@RequestMapping(value = "/notes/startcamunda", method = RequestMethod.GET , produces = "application/json")
+	@ApiOperation(value = "start camunda" , response = Note.class)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Sucessfully started camunda"),
+		@ApiResponse(code = 401 , message = "You are not authorized to start camunda"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public void startCamunda(){
+		
+		logger.debug("Inside Camunda NoteController");
+		processManager.easynotesGetAll();
+	}
+	
+	
+	//Get Cloud Config Data
+	@RequestMapping(value = "/notes/getclouddata", method = RequestMethod.GET , produces = "application/json")
+	@ApiOperation(value = "Get config data" , response = Note.class)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Sucessfully retrieved config data"),
+		@ApiResponse(code = 401 , message = "You are not authorized to get data"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public void getCloudConfig(){
+		
+		logger.debug("Inside Cloud Config NoteController");
+		logger.debug(applicationProperties.getConfigValue());
+	}
+	
+	
+	//Run rules engine
+	@RequestMapping(value = "/notes/rules", method = RequestMethod.POST , produces = "application/json")
+	@ApiOperation(value = "Run rules for note")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Rule Passes"),
+		@ApiResponse(code = 401 , message = "You are not authorized to run the rule"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public ResponseEntity<String> rulesValidation(@Valid @RequestBody Note note){
+		
+		logger.debug("Inside Run Engine NoteController");
+		noteService.droolValidator(note);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
 	//Get All Notes
 	@RequestMapping(value = "/notes", method = RequestMethod.GET , produces = "application/json")
 	@ApiOperation(value = "Get all notes" , response = Note.class)
@@ -91,9 +144,7 @@ public class NoteController {
 	})
 	public List<Note> getAllNotes(){
 		
-		processManager.easynotesGetAll();
 		logger.debug("Inside Getting all NoteController");
-		logger.debug(applicationProperties.getConfigValue());
 		List<Note> note = noteService.getAllNotes();
 		return note;
 	}
