@@ -4,12 +4,18 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.nandha.easynotes.controllers.NoteController;
 import com.nandha.easynotes.exception.ResourceNotFoundException;
 import com.nandha.easynotes.model.Note;
 import com.nandha.easynotes.repository.NoteRepository;
@@ -78,5 +84,15 @@ public class NoteService {
 		
 		noteRepository.deleteById(noteId);
 		return "Note deleted sucessfully";
+	}
+	
+	public void validateSchema(Object obj) {
+		
+		String str = new Gson().toJson(obj);
+		JSONObject jsonObject = new JSONObject(str);
+		JSONObject jsonSchema = new JSONObject(
+				new JSONTokener(NoteController.class.getResourceAsStream("/jsonSchema/noteSchema.json")));
+		Schema schema = SchemaLoader.load(jsonSchema);
+	    schema.validate(jsonObject);
 	}
 }

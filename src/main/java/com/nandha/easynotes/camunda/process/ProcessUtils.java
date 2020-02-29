@@ -39,6 +39,15 @@ public class ProcessUtils {
 
 		return processInstance;
 	}
+	
+	
+	ProcessInstance startProcessInstance(String processKey) {
+		
+		ProcessInstance processInstance;
+		processInstance = processEngine.getRuntimeService().startProcessInstanceByKey(processKey);
+		logger.info("Started process instance with process definition {}", processKey);
+		return processInstance;
+	}
 
 	void sendMessage(String businessKey, Map<String, Object> expectedVariables, String messageName) {
 		logger.info(

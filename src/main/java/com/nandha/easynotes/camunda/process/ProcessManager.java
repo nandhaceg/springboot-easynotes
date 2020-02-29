@@ -12,5 +12,13 @@ public class ProcessManager {
 	private static final Logger logger = LogManager.getLogger(ProcessManager.class);
 
 	@Autowired ProcessUtils processUtils;
+	
+	public void easynotesGetAll() {
+		
+		logger.debug("ProcessManager()");
+		
+		processUtils.startProcessInstance("easyNotes","123",Variables.putValue("LPN", "123"));
+				
+	}
 
 }

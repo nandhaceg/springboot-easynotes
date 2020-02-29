@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nandha.easynotes.camunda.process.ProcessManager;
 import com.nandha.easynotes.model.Note;
 import com.nandha.easynotes.properties.ApplicationProperties;
 import com.nandha.easynotes.service.HystrixFallback;
@@ -25,12 +26,16 @@ import io.swagger.annotations.ApiResponse;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "notesapp")public class NoteController {
+@Api(value = "notesapp")
+public class NoteController {
 
 	private static final Logger logger = LogManager.getLogger(NoteController.class);
 	
 	@Autowired
 	ApplicationProperties applicationProperties;
+	
+	@Autowired
+	ProcessManager processManager;
 	
 	@Autowired
 	NoteService noteService;
@@ -55,6 +60,25 @@ import io.swagger.annotations.ApiResponse;
 		return hystrixFallback.getAllNotes();
 	}
 	
+	
+	//Validate Note
+	@RequestMapping(value = "/notes/schemavalidate", method = RequestMethod.POST , produces = "application/json")
+	@ApiOperation(value = "Validate a note" , response = Note.class)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Note Validated"),
+		@ApiResponse(code = 401 , message = "You are not authorized to view the resource"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public void validateSchema(@Valid @RequestBody Object obj){
+		
+		logger.debug("Inside Schema Validation");
+		
+		noteService.validateSchema(obj);
+	}
+	
+	
 	//Get All Notes
 	@RequestMapping(value = "/notes", method = RequestMethod.GET , produces = "application/json")
 	@ApiOperation(value = "Get all notes" , response = Note.class)
@@ -67,6 +91,7 @@ import io.swagger.annotations.ApiResponse;
 	})
 	public List<Note> getAllNotes(){
 		
+		processManager.easynotesGetAll();
 		logger.debug("Inside Getting all NoteController");
 		logger.debug(applicationProperties.getConfigValue());
 		List<Note> note = noteService.getAllNotes();

@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Notes",
+    "description": "Notes from the Library",
+    "type": "object",
+    "properties": {
+        "title": {
+            "description": "title of the note",
+            "type": "string"
+        },
+        "content": {
+            "description": "content of the note",
+            "type": "string"
+        },
+		"price": {
+            "description": "price of the note",
+            "type": "string"
+        }
+    },
+    "required": ["title", "content", "price"]
+}

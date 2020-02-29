@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_01fhitg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.0">
+  <bpmn:process id="easyNotes" name="EasyNotes Flow" isExecutable="true">
+    <bpmn:startEvent id="StartEvent">
+      <bpmn:outgoing>Flow_0kjganf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_easyNotesOne" name="EasyNotesOne" camunda:delegateExpression="#{easyNotesOne}">
+      <bpmn:incoming>Flow_0kjganf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xq1bmw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1xq1bmw" sourceRef="Task_easyNotesOne" targetRef="Task_easyNotesTwo" />
+    <bpmn:sequenceFlow id="Flow_0kjganf" sourceRef="StartEvent" targetRef="Task_easyNotesOne" />
+    <bpmn:endEvent id="EndEvent">
+      <bpmn:incoming>Flow_08ffhfz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_08ffhfz" sourceRef="Task_easyNotesTwo" targetRef="EndEvent" />
+    <bpmn:serviceTask id="Task_easyNotesTwo" name="EasyNotesTwo" camunda:delegateExpression="#{easyNotesTwo}">
+      <bpmn:incoming>Flow_1xq1bmw</bpmn:incoming>
+      <bpmn:outgoing>Flow_08ffhfz</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="easyNotes">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13ggl1q_di" bpmnElement="Task_easyNotesOne">
+        <dc:Bounds x="290" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1xq1bmw_di" bpmnElement="Flow_1xq1bmw">
+        <di:waypoint x="390" y="117" />
+        <di:waypoint x="490" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kjganf_di" bpmnElement="Flow_0kjganf">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="290" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1206pki_di" bpmnElement="EndEvent">
+        <dc:Bounds x="692" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_08ffhfz_di" bpmnElement="Flow_08ffhfz">
+        <di:waypoint x="590" y="117" />
+        <di:waypoint x="692" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1te45te_di" bpmnElement="Task_easyNotesTwo">
+        <dc:Bounds x="490" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
