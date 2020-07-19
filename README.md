@@ -13,7 +13,7 @@ This application has connection to the following
 
 ### Logging
 
-This application has ELK for logging.
+This application has log4j2 which is written to a file in turn which can be linked go ELK.
 
 ### Build CMD
 
