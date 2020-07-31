@@ -19,6 +19,7 @@ import com.nandha.easynotes.camunda.process.ProcessManager;
 import com.nandha.easynotes.model.Note;
 import com.nandha.easynotes.properties.ApplicationProperties;
 import com.nandha.easynotes.service.HystrixFallback;
+import com.nandha.easynotes.service.KafkaSender;
 import com.nandha.easynotes.service.NoteService;
 
 import io.swagger.annotations.Api;
@@ -44,6 +45,9 @@ public class NoteController {
 
 	@Autowired
 	HystrixFallback hystrixFallback;
+	
+	@Autowired
+	KafkaSender kafkaSender;
 	
 	//Hystrix Sample
 	@RequestMapping(value = "/notes/hystrix", method = RequestMethod.GET , produces = "application/json")
@@ -131,6 +135,43 @@ public class NoteController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	
+	//Kafka String Message
+	@RequestMapping(value = "/notes/kafkaString", method = RequestMethod.POST , produces = "application/json")
+	@ApiOperation(value = "Run rules for note")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Rule Passes"),
+		@ApiResponse(code = 401 , message = "You are not authorized to run the rule"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public ResponseEntity<String> kafkaPostString(@Valid @RequestBody String message){
+		
+		logger.debug("Inside Run Engine NoteController");
+		kafkaSender.sendStringMessage("test", message);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
+	//Kafka Note Message
+	@RequestMapping(value = "/notes/kafkaNote", method = RequestMethod.POST , produces = "application/json")
+	@ApiOperation(value = "Run rules for note")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200 , message = "Rule Passes"),
+		@ApiResponse(code = 401 , message = "You are not authorized to run the rule"),
+		@ApiResponse(code = 403 , message = "Accessing the resource you were trying to reach is forbidden"),
+		@ApiResponse(code = 404 , message = "The resource you were trying to reach is not found"),
+		@ApiResponse(code = 500 , message = "Internal server error")
+	})
+	public ResponseEntity<String> kafkaPostNote(@Valid @RequestBody Note message){
+		
+		logger.debug("Inside Run Engine NoteController");
+		kafkaSender.sendNoteMessage("note", message);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 	//Get All Notes
 	@RequestMapping(value = "/notes", method = RequestMethod.GET , produces = "application/json")
