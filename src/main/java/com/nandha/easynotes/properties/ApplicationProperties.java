@@ -34,6 +34,15 @@ public class ApplicationProperties {
 	@Value("${spring.rabbitmq.password:guest}")
 	private String rabbitMQPassword;
 	
+	@Value("${spring.kafka.consumer.bootstrap-servers:localhost:9092}")
+	private String bootstrapAddress;
+	
+	@Value("${message.topic.name:test}")
+	private String stringTopic;
+	
+	@Value("${note.topic.name:note}")
+	private String noteTopic;
+	
 	public String getRabbitMQIP() {
 		return rabbitMQIP;
 	}
@@ -96,6 +105,30 @@ public class ApplicationProperties {
 
 	public void setConfigValue(String configValue) {
 		this.configValue = configValue;
+	}
+	
+	public String getBootstrapAddress() {
+		return bootstrapAddress;
+	}
+
+	public void setBootstrapAddress(String bootstrapAddress) {
+		this.bootstrapAddress = bootstrapAddress;
+	}
+
+	public String getStringTopic() {
+		return stringTopic;
+	}
+
+	public void setStringTopic(String stringTopic) {
+		this.stringTopic = stringTopic;
+	}
+
+	public String getNoteTopic() {
+		return noteTopic;
+	}
+
+	public void setNoteTopic(String noteTopic) {
+		this.noteTopic = noteTopic;
 	}
 	
 }
