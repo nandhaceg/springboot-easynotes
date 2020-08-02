@@ -1,5 +1,7 @@
 package com.nandha.easynotes.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -12,11 +14,13 @@ import com.nandha.easynotes.model.Note;
 @Component
 public class KafkaSender {
 	
+	private static final Logger logger = LogManager.getLogger(KafkaSender.class);
+	
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
 	
 	@Autowired
-    private KafkaTemplate<String, Note> noteKafkaTemplate;
+    	private KafkaTemplate<String, Note> noteKafkaTemplate;
 	
 	public void sendStringMessage(String topicName,String message) {
 		ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, message);
@@ -25,12 +29,12 @@ public class KafkaSender {
 	 
 	        @Override
 	        public void onSuccess(SendResult<String, String> result) {
-	            System.out.println("Sent message=[" + message + 
+	            logger.debug("Sent message=[" + message + 
 	              "] with offset=[" + result.getRecordMetadata().offset() + "]");
 	        }
 	        @Override
 	        public void onFailure(Throwable ex) {
-	            System.out.println("Unable to send message=[" 
+	            logger.debug("Unable to send message=[" 
 	              + message + "] due to : " + ex.getMessage());
 	        }
 	    });
@@ -43,12 +47,12 @@ public class KafkaSender {
 	 
 	        @Override
 	        public void onSuccess(SendResult<String, Note> result) {
-	            System.out.println("Sent message=[" + message + 
+	            logger.debug("Sent message=[" + message + 
 	              "] with offset=[" + result.getRecordMetadata().offset() + "]");
 	        }
 	        @Override
 	        public void onFailure(Throwable ex) {
-	            System.out.println("Unable to send message=[" 
+	            logger.debug("Unable to send message=[" 
 	              + message + "] due to : " + ex.getMessage());
 	        }
 	    });
