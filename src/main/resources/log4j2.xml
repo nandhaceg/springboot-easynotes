@@ -2,12 +2,12 @@
 <Configuration monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">
-        	%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex
+        	 %d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %style{${sys:PID} ${hostName}}{magenta} %style{[%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-B3-ParentSpanId},%X{X-Span-Export}]}{blue} --- [%15.15t] %style{%-40.40c{1.}}{cyan} : %m%n%ex
         </Property>
     </Properties>
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="${LOG_PATTERN}" />
+            <PatternLayout pattern="${LOG_PATTERN}" disableAnsi="false"/>
         </Console>
  		<!-- Rolling File Appender -->
         <RollingFile name="FileAppender" fileName="logs/easynotes.log" filePattern="logs/easynotes-%d{yyyy-MM-dd}-%i.log">
